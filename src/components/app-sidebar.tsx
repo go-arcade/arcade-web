@@ -19,8 +19,7 @@ import { NavMain } from '@/components/nav-main'
 import { NavProjects } from '@/components/nav-projects'
 import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
-import { StorageCard } from '@/components/storage-card'
-import { TeamSwitcher } from '@/components/team-switcher'
+import { OrgSwitcher } from '@/components/org-manage'
 import { BugReportDialog } from '@/components/bug-report-dialog'
 import {
   Sidebar,
@@ -33,12 +32,12 @@ import {
 import LOGO from '@/assets/logo.png'
 
 export function AppSidebar() {
-  const logo = () => <img alt='Arcade Team' src={LOGO} />
+  const logo = () => <img alt='Arcade' src={LOGO} />
 
   const data = {
-    teams: [
+    organizations: [
       {
-        name: 'Arcade Team',
+        name: 'Arcade',
         logo,
         plan: 'Enterprise',
       },
@@ -246,7 +245,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <OrgSwitcher orgs={data.organizations} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarItem>
@@ -261,9 +260,6 @@ export function AppSidebar() {
           <SidebarLabel>Help</SidebarLabel>
           <NavSecondary items={data.navSecondary} />
           <BugReportDialog />
-        </SidebarItem>
-        <SidebarItem>
-          <StorageCard />
         </SidebarItem>
       </SidebarContent>
       <SidebarFooter>
