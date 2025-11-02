@@ -2,8 +2,8 @@ import { get, post, put } from '../client'
 import type { UserInfo } from '@/models/user'
 
 // 获取用户信息
-function getUserInfo() {
-  return get<UserInfo>('/user/getUserInfo', { silence: true })
+function fetchUserInfo() {
+  return get<UserInfo>('/user/fetchUserInfo', { silence: true })
 }
 
 // 更新用户信息
@@ -38,7 +38,7 @@ function uploadAvatar(file: File) {
 }
 
 export default {
-  getUserInfo,
+  getUserInfo: fetchUserInfo,
   updateUserInfo,
   logout,
   refreshToken,
