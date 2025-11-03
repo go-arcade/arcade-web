@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { ChevronRight, Search, type LucideIcon } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { ChevronRight, Search, LayoutDashboard, type LucideIcon } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -9,28 +10,51 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { Kbd, KbdGroup } from '@/components/ui/kbd'
 
+type NavSubItem = {
+  title: string
+  url: string
+  items?: NavSubItem[]
+}
+
 export function NavMain({
   className,
   items,
   searchResults,
+  dashboardUrl,
 }: {
   items: {
     title: string
     url: string
     icon: LucideIcon
     isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
+    items?: NavSubItem[]
   }[]
   searchResults: React.ComponentProps<typeof SidebarSearch>['results']
+  dashboardUrl?: string
 } & React.ComponentProps<'ul'>) {
+  const location = useLocation()
+  
   return (
     <ul className={cn('grid gap-0.5', className)}>
       <li>
         <SidebarSearch results={searchResults} />
       </li>
+      {dashboardUrl && (
+        <li>
+          <Link
+            to={dashboardUrl}
+            className={cn(
+              'min-w-8 flex h-8 w-full items-center gap-2 overflow-hidden rounded-md px-1.5 text-sm font-medium outline-none ring-ring transition-all hover:bg-accent hover:text-accent-foreground focus-visible:ring-2',
+              location.pathname === dashboardUrl ? 'bg-accent text-accent-foreground' : ''
+            )}
+          >
+            <LayoutDashboard className='h-4 w-4 shrink-0' />
+            <div className='flex flex-1 overflow-hidden'>
+              <div className='line-clamp-1 pr-6'>Dashboard</div>
+            </div>
+          </Link>
+        </li>
+      )}
       {items.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
@@ -46,13 +70,21 @@ function NavItem({
     url: string
     icon: LucideIcon
     isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
+    items?: NavSubItem[]
   }
 }) {
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(item.isActive || false)
+  
+  // 检查当前路由是否匹配子项
+  useEffect(() => {
+    if (item.items) {
+      const hasActiveChild = item.items.some(subItem => location.pathname === subItem.url)
+      if (hasActiveChild) {
+        setIsOpen(true)
+      }
+    }
+  }, [location.pathname, item.items])
 
   return (
     <li>
@@ -77,16 +109,89 @@ function NavItem({
         </CollapsibleTrigger>
         <CollapsibleContent className='px-4 py-0.5'>
           <ul className='grid border-l px-2'>
-            {item.items?.map((subItem) => (
-              <li key={subItem.title}>
-                <a
-                  className='min-w-8 flex h-8 items-center gap-2 overflow-hidden rounded-md px-2 text-sm font-medium text-muted-foreground ring-ring transition-all hover:bg-accent hover:text-accent-foreground focus-visible:ring-2'
-                  href={subItem.url}
-                >
-                  <div className='line-clamp-1'>{subItem.title}</div>
-                </a>
-              </li>
-            ))}
+            {item.items?.map((subItem) => {
+              // 检查是否有子菜单
+              if (subItem.items && subItem.items.length > 0) {
+                return <NestedNavItem key={subItem.title} item={subItem} />
+              }
+              
+              const isActive = location.pathname === subItem.url
+              return (
+                <li key={subItem.title}>
+                  <Link
+                    to={subItem.url}
+                    className={cn(
+                      'min-w-8 flex h-8 items-center gap-2 overflow-hidden rounded-md px-2 text-sm font-medium ring-ring transition-all hover:bg-accent hover:text-accent-foreground focus-visible:ring-2',
+                      isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'
+                    )}
+                  >
+                    <div className='line-clamp-1'>{subItem.title}</div>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </CollapsibleContent>
+      </Collapsible>
+    </li>
+  )
+}
+
+// 嵌套子菜单项
+function NestedNavItem({
+  item,
+}: {
+  item: NavSubItem
+}) {
+  const location = useLocation()
+  const [isOpen, setIsOpen] = useState(false)
+
+  // 检查是否有激活的子项
+  useEffect(() => {
+    if (item.items) {
+      const hasActiveChild = item.items.some(child => location.pathname === child.url)
+      if (hasActiveChild) {
+        setIsOpen(true)
+      }
+    }
+  }, [location.pathname, item.items])
+
+  return (
+    <li>
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger asChild>
+          <div
+            className='min-w-8 flex h-8 items-center gap-2 overflow-hidden rounded-md px-2 text-sm font-medium text-muted-foreground ring-ring transition-all hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 cursor-pointer'
+            role='button'
+            tabIndex={0}
+          >
+            <div className='flex flex-1 overflow-hidden'>
+              <div className='line-clamp-1'>{item.title}</div>
+            </div>
+            <ChevronRight className={cn(
+              'h-3 w-3 shrink-0 text-muted-foreground transition-transform',
+              isOpen && 'rotate-90'
+            )} />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className='pl-2'>
+          <ul className='grid border-l ml-2'>
+            {item.items?.map((child) => {
+              const isActive = location.pathname === child.url
+              return (
+                <li key={child.title}>
+                  <Link
+                    to={child.url}
+                    className={cn(
+                      'min-w-8 flex h-8 items-center gap-2 overflow-hidden rounded-md px-2 text-sm font-medium ring-ring transition-all hover:bg-accent hover:text-accent-foreground focus-visible:ring-2',
+                      isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'
+                    )}
+                  >
+                    <div className='line-clamp-1'>{child.title}</div>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </CollapsibleContent>
       </Collapsible>

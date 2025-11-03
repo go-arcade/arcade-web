@@ -9,7 +9,7 @@ import type {
 
 function login(data: LoginRequest) {
   return post<LoginResponse>(
-    '/user/login',
+    '/users/login',
     {
       ...data,
       password: btoa(data.password),
@@ -20,7 +20,7 @@ function login(data: LoginRequest) {
 
 function loginWithLDAP(provider: string, data: LDAPLoginRequest) {
   return post<LoginResponse>(
-    `/auth/ldap/login/${provider}`,
+    `/identity/ldap/login/${provider}`,
     {
       ...data,
       password: btoa(data.password),
@@ -35,8 +35,8 @@ function getAuthorizeUrl(provider: string, redirectUri: string) {
   const params = new URLSearchParams({
     redirect_uri: redirectUri,
   })
-  const baseUrl = import.meta.env.VITE_API_CLIENT_URL || ''
-  return `${baseUrl}/auth/authorize/${provider}?${params.toString()}`
+  const baseUrl = import.meta.env.VITE_API_CLIENT_URL || '/api/v1'
+  return `${baseUrl}/identity/authorize/${provider}?${params.toString()}`
 }
 
 // 处理回调 - 由 AuthCallback 页面调用
@@ -45,14 +45,14 @@ function handleCallback(provider: string, code: string, state?: string) {
   if (state) params.append('state', state)
   
   return get<LoginResponse>(
-    `/auth/callback/${provider}?${params.toString()}`,
+    `/identity/callback/${provider}?${params.toString()}`,
     { silence: true },
   )
 }
 
 function register(data: RegisterRequest) {
   return post<RegisterResponse>(
-    '/user/register',
+    '/users/register',
     {
       ...data,
       password: btoa(data.password),

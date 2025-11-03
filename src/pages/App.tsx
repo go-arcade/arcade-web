@@ -2,9 +2,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import AuthGuard from '@/components/Layouts/AuthGuard'
 import DefaultLayouts from '@/components/Layouts/default'
+import SidebarLayoutWrapper from '@/components/Layouts/sidebar-layout'
 import Login from './Login'
 import Register from './Register'
 import Dashboard from './Dashboard'
+import IdentityIntegration from './IdentityIntegration'
+import Users from './Users'
+import Roles from './Roles'
 import { AuthCallback } from './AuthCallback'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -15,7 +19,12 @@ function App() {
         <Routes>
           <Route element={<DefaultLayouts />}>
             <Route element={<AuthGuard />}>
-              <Route element={<Dashboard />} index path='/' />
+              <Route element={<SidebarLayoutWrapper />}>
+                <Route element={<Dashboard />} index path='/' />
+                <Route element={<Users />} path='/users' />
+                <Route element={<Roles />} path='/roles' />
+                <Route element={<IdentityIntegration />} path='/identity-integration' />
+              </Route>
             </Route>
             <Route element={<Login />} path='/login' />
             <Route element={<Register />} path='/register' />
@@ -35,8 +44,7 @@ function App() {
         pauseOnHover
         theme='light'
         icon={false}
-        toastClassName='border rounded-lg shadow-lg'
-        bodyClassName='text-sm'
+        toastClassName='border rounded-lg shadow-lg text-sm'
       />
     </>
   )

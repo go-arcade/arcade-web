@@ -1,4 +1,3 @@
-
 import {
   Bird,
   BookOpen,
@@ -52,9 +51,10 @@ export function AppSidebar() {
         plan: 'Free',
       },
     ],
+    // NavUser 组件会自己从 store 获取用户信息，这里只是默认值
     user: {
-      name: 'Arcade',
-      email: 'support@go-arcade.com',
+      name: 'User',
+      email: 'user@example.com',
       avatar: LOGO,
     },
     navMain: [
@@ -180,6 +180,24 @@ export function AppSidebar() {
             title: 'Limits',
             url: '#',
           },
+          {
+            title: 'Access Control',
+            url: '#',
+            items: [
+              {
+                title: 'Users',
+                url: '/users',
+              },
+              {
+                title: 'Roles',
+                url: '/roles',
+              },
+            ],
+          },
+          {
+            title: 'Identity Integration',
+            url: '/identity-integration',
+          },
         ],
       },
     ],
@@ -250,7 +268,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarItem>
           <SidebarLabel>Platform</SidebarLabel>
-          <NavMain items={data.navMain} searchResults={data.searchResults} />
+          <NavMain items={data.navMain} searchResults={data.searchResults} dashboardUrl='/' />
         </SidebarItem>
         <SidebarItem>
           <SidebarLabel>Projects</SidebarLabel>

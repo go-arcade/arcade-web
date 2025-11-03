@@ -70,26 +70,54 @@ export function NavUser({
   const { theme, setTheme } = useTheme()
   const { register, handleSubmit, reset } = useForm()
   const fileInputRef = React.useRef<HTMLInputElement>(null)
-  const nicknameInputRef = React.useRef<HTMLInputElement | null>(null)
+  const firstNameInputRef = React.useRef<HTMLInputElement | null>(null)
 
-  // 获取用户信息
+  // 初始化用户信息（只在组件首次加载时）
   useEffect(() => {
     const fetchUserInfo = async () => {
       // 如果正在加载，跳过
       if (isLoading) return
       
-      // 检查是否有 token
+      // 先检查 store 中是否已有用户信息
+      const storedUserInfo = userStore.getState().userinfo
+      if (storedUserInfo) {
+        // 使用已存储的用户信息，不再请求 API
+        console.log('[NavUser] Using cached user info from store')
+        let displayName = storedUserInfo.username
+        if (storedUserInfo.firstName && storedUserInfo.lastName) {
+          displayName = language === 'zh-CN' 
+            ? `${storedUserInfo.lastName} ${storedUserInfo.firstName}`
+            : `${storedUserInfo.firstName} ${storedUserInfo.lastName}`
+        }
+        setUser({
+          name: displayName,
+          email: storedUserInfo.email,
+          avatar: storedUserInfo.avatar || DEFAULT_USER_AVATAR,
+        })
+        return
+      }
+      
+      // store 中没有数据，检查是否有 token
       const authState = authStore.getState()
       if (!authState.accessToken) {
         setUser(initialUser)
         return
       }
       
+      // 有 token 但没有用户信息，请求一次
+      console.log('[NavUser] Fetching user info from API (store is empty)')
       setIsLoading(true)
       try {
         const userInfo = await Apis.user.getUserInfo()
+        // 根据语言设置调整名字顺序
+        let displayName = userInfo.username
+        if (userInfo.firstName && userInfo.lastName) {
+          displayName = language === 'zh-CN' 
+            ? `${userInfo.lastName} ${userInfo.firstName}`  // 中文：姓 名
+            : `${userInfo.firstName} ${userInfo.lastName}`  // 英文：名 姓
+        }
         const newUser = {
-          name: userInfo.nickname || userInfo.username,
+          name: displayName,
           email: userInfo.email,
           avatar: userInfo.avatar || DEFAULT_USER_AVATAR,
         }
@@ -111,6 +139,20 @@ export function NavUser({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // 当语言切换时，更新用户名显示顺序
+  useEffect(() => {
+    const userInfo = userStore.getState().userinfo
+    if (userInfo && userInfo.firstName && userInfo.lastName) {
+      const displayName = language === 'zh-CN'
+        ? `${userInfo.lastName} ${userInfo.firstName}`  // 中文：姓 名
+        : `${userInfo.firstName} ${userInfo.lastName}`  // 英文：名 姓
+      setUser((prev) => ({
+        ...prev,
+        name: displayName,
+      }))
+    }
+  }, [language])
+
   const handleLogout = async () => {
     try {
       await globalLogout()
@@ -123,17 +165,31 @@ export function NavUser({
   const handleSaveProfile = handleSubmit(async (data) => {
     setIsSaving(true)
     try {
+      // 获取当前用户 ID
+      const currentUserInfo = userStore.getState().userinfo
+      if (!currentUserInfo?.userId) {
+        toast.error('Failed to update profile', 'User ID not found')
+        return
+      }
+
       // 调用更新用户信息的 API
-      const updatedUserInfo = await Apis.user.updateUserInfo({
-        nickname: data.nickname,
+      const updatedUserInfo = await Apis.user.updateUserInfo(currentUserInfo.userId, {
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         phone: data.phone,
         avatar: data.avatar,
       })
       
       // 更新本地用户信息
+      let displayName = updatedUserInfo.username
+      if (updatedUserInfo.firstName && updatedUserInfo.lastName) {
+        displayName = language === 'zh-CN'
+          ? `${updatedUserInfo.lastName} ${updatedUserInfo.firstName}`  // 中文：姓 名
+          : `${updatedUserInfo.firstName} ${updatedUserInfo.lastName}`  // 英文：名 姓
+      }
       setUser({
-        name: updatedUserInfo.nickname || updatedUserInfo.username,
+        name: displayName,
         email: updatedUserInfo.email,
         avatar: updatedUserInfo.avatar || DEFAULT_USER_AVATAR,
       })
@@ -185,10 +241,12 @@ export function NavUser({
       const response = await Apis.user.uploadAvatar(file)
       
       // 更新表单中的 avatar 值
+      const userInfo = userStore.getState().userinfo
       reset({
-        nickname: user.name,
+        firstName: userInfo?.firstName || '',
+        lastName: userInfo?.lastName || '',
         email: user.email,
-        phone: '',
+        phone: userInfo?.phone || '',
         avatar: response.url,
       })
       
@@ -207,7 +265,8 @@ export function NavUser({
       const userState = userStore.getState()
       const userInfo = userState.userinfo
       reset({
-        nickname: userInfo?.nickname || '',
+        firstName: userInfo?.firstName || '',
+        lastName: userInfo?.lastName || '',
         email: user.email,
         phone: userInfo?.phone || '',
         avatar: userInfo?.avatar || '',
@@ -215,7 +274,7 @@ export function NavUser({
       setAvatarPreview(userInfo?.avatar || user.avatar || '')
       // 延迟聚焦到第一个输入框，确保 Sheet 动画完成
       setTimeout(() => {
-        nicknameInputRef.current?.focus()
+        firstNameInputRef.current?.focus()
       }, 100)
     } else {
       setAvatarPreview('')
@@ -281,19 +340,60 @@ export function NavUser({
                       className='bg-muted cursor-not-allowed'
                     />
                   </div>
-                  <div className='grid gap-3'>
-                    <Label htmlFor='nickname'>Nickname</Label>
-                    <Input
-                      id='nickname'
-                      {...register('nickname')}
-                      ref={(e) => {
-                        const { ref } = register('nickname')
-                        ref(e)
-                        ;(nicknameInputRef as React.MutableRefObject<HTMLInputElement | null>).current = e
-                      }}
-                      placeholder='Enter your nickname'
-                      disabled={isSaving}
-                    />
+                  <div className='grid grid-cols-2 gap-4'>
+                    {language === 'zh-CN' ? (
+                      <>
+                        <div className='space-y-2'>
+                          <Label htmlFor='lastName'>姓</Label>
+                          <Input
+                            id='lastName'
+                            {...register('lastName')}
+                            placeholder='请输入姓氏'
+                            disabled={isSaving}
+                          />
+                        </div>
+                        <div className='space-y-2'>
+                          <Label htmlFor='firstName'>名</Label>
+                          <Input
+                            id='firstName'
+                            {...register('firstName')}
+                            ref={(e) => {
+                              const { ref } = register('firstName')
+                              ref(e)
+                              ;(firstNameInputRef as React.MutableRefObject<HTMLInputElement | null>).current = e
+                            }}
+                            placeholder='请输入名字'
+                            disabled={isSaving}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className='space-y-2'>
+                          <Label htmlFor='firstName'>First Name</Label>
+                          <Input
+                            id='firstName'
+                            {...register('firstName')}
+                            ref={(e) => {
+                              const { ref } = register('firstName')
+                              ref(e)
+                              ;(firstNameInputRef as React.MutableRefObject<HTMLInputElement | null>).current = e
+                            }}
+                            placeholder='Enter your first name'
+                            disabled={isSaving}
+                          />
+                        </div>
+                        <div className='space-y-2'>
+                          <Label htmlFor='lastName'>Last Name</Label>
+                          <Input
+                            id='lastName'
+                            {...register('lastName')}
+                            placeholder='Enter your last name'
+                            disabled={isSaving}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                   <div className='grid gap-3'>
                     <Label htmlFor='email'>Email</Label>

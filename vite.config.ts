@@ -31,11 +31,10 @@ export default defineConfig(({ command, mode }) => {
       port: 5173,
       proxy: {
         // API 代理配置，开发环境将 /api 请求转发到后端
-        // 前端: /api/user/login -> 后端: http://localhost:8080/api/v1/user/login
+        // 前端: /api/v1/users/login -> 后端: http://localhost:8080/api/v1/users/login
         '/api': {
           target: process.env.VITE_API_URL || 'http://localhost:8080',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
         },
       },
     },

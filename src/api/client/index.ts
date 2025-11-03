@@ -6,7 +6,7 @@ import authStore from '@/store/auth'
 import type { ApiClientErrorResponse, ApiClientResponse, RequestConfig } from './types'
 
 export const client = axios.create({
-  baseURL: ENV.API_CLIENT_URL,
+  baseURL: ENV.API_CLIENT_URL || '/api/v1',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
