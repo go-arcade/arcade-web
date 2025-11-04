@@ -112,17 +112,17 @@ const Sidebar = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({
 Sidebar.displayName = 'Sidebar'
 
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
-  return <div className={cn('flex items-center border-b px-2.5 py-2', className)} ref={ref} {...props} />
+  return <div className={cn('flex items-center px-2.5 py-2', className)} ref={ref} {...props} />
 })
 SidebarHeader.displayName = 'SidebarHeader'
 
 const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
-  return <div className={cn('flex items-center border-t px-2.5 py-2', className)} ref={ref} {...props} />
+  return <div className={cn('flex items-center px-2.5 py-2', className)} ref={ref} {...props} />
 })
 SidebarFooter.displayName = 'SidebarFooter'
 
 const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
-  return <div className={cn('flex flex-1 flex-col gap-5 overflow-auto py-4', className)} ref={ref} {...props} />
+  return <div className={cn('flex flex-1 flex-col gap-5 overflow-auto pt-2 pb-4', className)} ref={ref} {...props} />
 })
 SidebarContent.displayName = 'SidebarContent'
 
