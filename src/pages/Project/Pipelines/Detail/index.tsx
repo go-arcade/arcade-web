@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { GitBranch, Edit } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PipelineVisualizer } from '@/components/pipeline-visualizer'
@@ -15,7 +14,7 @@ import { PipelineEditorDialog, type Pipeline } from '@/components/pipeline-edito
 import { toast } from '@/lib/toast'
 
 const PipelineDetail: FC = () => {
-  const { projectId, id } = useParams<{ projectId: string; id: string }>()
+  const { projectId: _projectId, id } = useParams<{ projectId: string; id: string }>()
   const [pipeline, setPipeline] = useState<Pipeline | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [loading, setLoading] = useState(true)

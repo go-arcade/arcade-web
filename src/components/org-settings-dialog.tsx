@@ -30,12 +30,12 @@ interface OrgSettingsDialogProps {
 export function OrgSettingsDialog({
   open,
   onOpenChange,
-  organizationId,
+  organizationId: _organizationId,
   mode,
 }: OrgSettingsDialogProps) {
   const isEditMode = mode === 'edit'
   const [isUploading, setIsUploading] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, _setIsSaving] = useState(false)
   const [logoPreview, setLogoPreview] = useState<string>('')
   const [logoUrl, setLogoUrl] = useState<string>('')
   const fileInputRef = useRef<HTMLInputElement>(null)

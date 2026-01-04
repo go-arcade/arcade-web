@@ -23,7 +23,7 @@ export async function getOrganizations(): Promise<OrganizationListResponse> {
  * 根据 ID 获取组织详情
  * TODO: 实现 API 调用
  */
-export async function getOrganization(id: string): Promise<Organization> {
+export async function getOrganization(_id: string): Promise<Organization> {
   // TODO: 调用后端 API
   throw new Error('API not implemented yet')
 }
@@ -33,7 +33,7 @@ export async function getOrganization(id: string): Promise<Organization> {
  * TODO: 实现 API 调用
  */
 export async function createOrganization(
-  data: CreateOrganizationRequest
+  _data: CreateOrganizationRequest
 ): Promise<Organization> {
   // TODO: 调用后端 API
   throw new Error('API not implemented yet')
@@ -44,8 +44,8 @@ export async function createOrganization(
  * TODO: 实现 API 调用
  */
 export async function updateOrganization(
-  id: string,
-  data: UpdateOrganizationRequest
+  _id: string,
+  _data: UpdateOrganizationRequest
 ): Promise<Organization> {
   // TODO: 调用后端 API
   throw new Error('API not implemented yet')
@@ -55,7 +55,7 @@ export async function updateOrganization(
  * 删除组织
  * TODO: 实现 API 调用
  */
-export async function deleteOrganization(id: string): Promise<void> {
+export async function deleteOrganization(_id: string): Promise<void> {
   // TODO: 调用后端 API
   throw new Error('API not implemented yet')
 }

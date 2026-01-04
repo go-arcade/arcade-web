@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 
 const ProjectSettings: FC = () => {
-  const { projectId } = useParams<{ projectId: string }>()
+  const { projectId: _projectId } = useParams<{ projectId: string }>()
   
   return (
     <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
