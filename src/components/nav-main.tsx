@@ -465,7 +465,7 @@ function SidebarSearch({
                   </Link>
                   <a
                     className='rounded-md px-2.5 py-1 text-muted-foreground outline-none ring-ring hover:text-foreground focus-visible:ring-2 block'
-                    href='https://docs.go-arcade.io/'
+                    href='https://docs.arcentra.io/'
                     target='_blank'
                     rel='noopener noreferrer'
                     onClick={() => setOpen(false)}
@@ -567,7 +567,7 @@ function SidebarSearch({
                 </Link>
                 <a
                   className='rounded-md px-2.5 py-1 text-muted-foreground outline-none ring-ring hover:text-foreground focus-visible:ring-2 block'
-                  href='https://docs.go-arcade.io/'
+                  href='https://docs.arcentra.io/'
                   target='_blank'
                   rel='noopener noreferrer'
                   onClick={() => setOpen(false)}

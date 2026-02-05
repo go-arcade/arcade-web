@@ -54,6 +54,6 @@ class WebStorage<Keys = StorageKeys> {
   }
 }
 
-const arcadeWebStorage = new WebStorage(localStorage, 'ARCADE_')
+const arcentraWebStorage = new WebStorage(localStorage, 'ARCADE_')
 
-export default arcadeWebStorage
+export default arcentraWebStorage

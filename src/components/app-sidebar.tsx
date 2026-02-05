@@ -27,12 +27,12 @@ import {
 import { APP_LOGO } from '@/constants/assets'
 
 export function AppSidebar() {
-  const logo = () => <img alt='Arcade' src={APP_LOGO} />
+  const logo = () => <img alt='Arcentra' src={APP_LOGO} />
 
   const data = {
     organizations: [
       {
-        name: 'Arcade',
+        name: 'Arcentra',
         logo,
         plan: 'Enterprise',
       },
@@ -133,7 +133,7 @@ export function AppSidebar() {
       },
       {
         title: 'Documentation',
-        url: 'https://docs.go-arcade.io/',
+        url: 'https://docs.arcentra.io/',
         icon: BookOpen,
       },
     ],
@@ -176,32 +176,32 @@ export function AppSidebar() {
       },
       {
         title: 'Getting Started',
-        teaser: 'Learn how to get started with Arcade platform',
-        url: 'https://docs.go-arcade.io/getting-started',
+        teaser: 'Learn how to get started with Arcentra platform',
+        url: 'https://docs.arcentra.io/getting-started',
         category: 'documentation' as const,
       },
       {
         title: 'Pipeline Configuration',
         teaser: 'Guide on how to configure and manage pipelines',
-        url: 'https://docs.go-arcade.io/pipelines/configuration',
+        url: 'https://docs.arcentra.io/pipelines/configuration',
         category: 'documentation' as const,
       },
       {
         title: 'Agent Management',
         teaser: 'Documentation on creating and managing AI agents',
-        url: 'https://docs.go-arcade.io/agents/management',
+        url: 'https://docs.arcentra.io/agents/management',
         category: 'documentation' as const,
       },
       {
         title: 'API Reference',
-        teaser: 'Complete API reference for Arcade platform',
-        url: 'https://docs.go-arcade.io/api/reference',
+        teaser: 'Complete API reference for Arcentra platform',
+        url: 'https://docs.arcentra.io/api/reference',
         category: 'documentation' as const,
       },
       {
         title: 'Deployment Guide',
         teaser: 'Step-by-step guide for deploying applications',
-        url: 'https://docs.go-arcade.io/deployment/guide',
+        url: 'https://docs.arcentra.io/deployment/guide',
         category: 'documentation' as const,
       },
     ],

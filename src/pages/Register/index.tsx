@@ -11,9 +11,9 @@ const Register: FC<RegisterProps> = () => {
         <div className='flex justify-center gap-2 md:justify-start'>
           <a href='/' className='flex items-center gap-2 font-medium'>
             <div className='bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md p-1'>
-              <img alt='Arcade' src={APP_LOGO} className='h-full w-full object-contain' />
+              <img alt='Arcentra' src={APP_LOGO} className='h-full w-full object-contain' />
             </div>
-            Arcade
+            Arcentra
           </a>
         </div>
         <div className='flex flex-1 items-center justify-center'>

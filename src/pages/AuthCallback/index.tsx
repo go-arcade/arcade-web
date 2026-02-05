@@ -46,7 +46,7 @@ export function AuthCallback() {
         authStore.setTokens(response.token)
 
         // 跳转到主页
-        toast.success('Login successful!', 'Welcome back to Arcade.')
+        toast.success('Login successful!', 'Welcome back to Arcentra.')
         navigate('/')
       } catch (error) {
         const errorMessage = (error as Error).message

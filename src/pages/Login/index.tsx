@@ -11,9 +11,9 @@ const Login: FC<LoginProps> = () => {
         <div className='flex justify-center gap-2 md:justify-start'>
           <a href='/' className='flex items-center gap-2 font-medium'>
             <div className='bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md p-1'>
-              <img alt='Arcade' src={APP_LOGO} className='h-full w-full object-contain' />
+              <img alt='Arcentra' src={APP_LOGO} className='h-full w-full object-contain' />
             </div>
-            Arcade
+            Arcentra
           </a>
         </div>
         <div className='flex flex-1 items-center justify-center'>
@@ -27,7 +27,7 @@ const Login: FC<LoginProps> = () => {
           <div className='max-w-md space-y-4 text-center'>
             <blockquote className='space-y-2'>
               <p className='text-2xl font-semibold'>&ldquo;A Cloud Native CI/CD platform&rdquo;</p>
-              <footer className='text-sm text-muted-foreground'>— Arcade Team</footer>
+              <footer className='text-sm text-muted-foreground'>— Arcentra Team</footer>
             </blockquote>
           </div>
         </div>

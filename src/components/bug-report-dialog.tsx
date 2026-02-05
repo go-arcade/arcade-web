@@ -85,7 +85,7 @@ export function BugReportDialog() {
         
         const issueTitle = encodeURIComponent(`[Bug] ${data.title}`)
         const issueBody = encodeURIComponent(
-          `## Bug Description\n\n${data.description}\n\n---\n\n**Reported via Arcade Platform**\n- Browser: ${navigator.userAgent}\n- Timestamp: ${new Date().toISOString()}`
+          `## Bug Description\n\n${data.description}\n\n---\n\n**Reported via Arcentra Platform**\n- Browser: ${navigator.userAgent}\n- Timestamp: ${new Date().toISOString()}`
         )
         const githubUrl = `https://github.com/${ENV.GITHUB_REPO}/issues/new?title=${issueTitle}&body=${issueBody}&labels=bug`
 

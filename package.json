@@ -1,12 +1,12 @@
 {
-  "name": "arcade-web",
+  "name": "arcentra-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "author": {
-    "name": "Arcade Team",
-    "email": "support@go-arcade.io",
-    "url": "https://go-arcade.io"
+    "name": "Arcentra Team",
+    "email": "support@arcentra.io",
+    "url": "https://arcentra.io"
   },
   "scripts": {
     "dev": "vite",

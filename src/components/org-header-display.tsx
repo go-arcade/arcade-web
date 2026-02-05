@@ -9,7 +9,7 @@ export function OrgHeaderDisplay() {
   const { currentOrganization } = useOrganizationStore()
   
   // 获取显示的组织信息
-  const displayName = currentOrganization?.name || 'Arcade'
+  const displayName = currentOrganization?.name || 'Arcentra'
   const displayLogo = currentOrganization?.logo || APP_LOGO
   
   return (
